@@ -13,19 +13,14 @@
     <form action="/user/profile" method="post" class="form" role="form" novalidate>
     {{ form.csrf_token }}
     <div class="form-floating mb-3">
-        <input type="text" class="form-control {% if form.username.errors %}is-invalid{% endif %}" id="profile-username" name="username" required placeholder="" {% if form.username.data %}value="{{form.username.data}}"{% endif %}>
+        <input readonly type="text" class="form-control {% if form.username.errors %}is-invalid{% endif %}" id="profile-username" name="username" required placeholder="" {% if form.username.data %}value="{{form.username.data}}"{% endif %}>
         <label for="profile-username">Benutzername</label>
         <div class="invalid-feedback">Benutzername darf nur Buchstaben beinhalten und muss zwischen 5 und 64 Zeichen lang sein.<br>Ist dies der Fall, ist der Benutzername leider bereits vergeben.</div>
     </div>
     <div class="form-floating mb-3">
-        <input type="email" class="form-control {% if form.email.errors %}is-invalid{% endif %}" id="profile-email" name="email" required placeholder="" {% if form.email.data %}value="{{form.email.data}}"{% endif %}>
+        <input readonly type="email" class="form-control {% if form.email.errors %}is-invalid{% endif %}" id="profile-email" name="email" required placeholder="" {% if form.email.data %}value="{{form.email.data}}"{% endif %}>
         <label for="profile-email">E-Mail</label>
         <div class="invalid-feedback">E-Mail Adresse muss gültig sein.<br>Prüfen Sie auch, ob Sie diese nicht bereits registriert haben.</div>
-    </div>
-    <div class="form-floating mb-3">
-        <input type="password" class="form-control {% if form.password.errors %}is-invalid{% endif %}" id="profile-password" name="password" placeholder="" value="">
-        <label for="profile-password">Passwort</label>
-        <div class="invalid-feedback">Passwort muss mindestens 12 Zeichen lang, möglichst komplex und einmalig sein.</div>
     </div>
   </div>
 </div>
