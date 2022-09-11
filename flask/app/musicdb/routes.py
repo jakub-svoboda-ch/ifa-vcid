@@ -240,6 +240,7 @@ def user_password():
 
   email = check_token()
   form = form_user_password()
+  token = request.args.get('token')
 
   if form.validate_on_submit():
     user = db_users.query.filter_by(email=email).first()
