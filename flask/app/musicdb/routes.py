@@ -121,7 +121,6 @@ JOIN artists ON (artists.id = tbl1.artists_id) ORDER BY c DESC
 
 
 @app.route('/impressum')
-#@login_required
 def impressum():
   return render_template('impressum.html', title='Impressum')
 
@@ -254,6 +253,7 @@ def user_password():
   return render_template('user_password.html', title='Passwort zurücksetzen', form=form, token=token)
 
 @app.route('/user/profile', methods=['GET', 'POST'])
+@login_required
 def user_profile():
   form = form_user_register()
   user = db_users.query.filter_by(id=current_user.id).first()
@@ -309,7 +309,7 @@ def musicdb_artists_delete(artistid=0):
 
 @app.route('/musicdb')
 @app.route('/musicdb/albums')
-#@login_required
+@login_required
 def musicdb_albums():
   return render_template('musicdb_albums.html', title='Musikbibliothek')
 
@@ -337,7 +337,7 @@ def get_artist_id(name):
 
 
 @app.route('/musicdb/albums/create', methods=['GET', 'POST'])
-#@login_required
+@login_required
 def musicdb_albums_create(albumid=0):
 
   form = form_album()
@@ -381,7 +381,7 @@ def musicdb_albums_create(albumid=0):
 
 
 @app.route('/musicdb/albums/edit/<int:albumid>', methods=['GET', 'POST'])
-#@login_required
+@login_required
 def musicdb_albums_edit(albumid=0):
   if albumid == 0:
     flash('Ungültige Albumid.', 'error')
@@ -444,7 +444,7 @@ def musicdb_albums_edit(albumid=0):
 
 
 @app.route('/musicdb/albums/delete/<int:albumid>')
-#@login_required
+@login_required
 def musicdb_albums_delete(albumid=0):
   if albumid != 0:
     db_songs.query.filter_by(albums_id=albumid).delete()
@@ -456,7 +456,6 @@ def musicdb_albums_delete(albumid=0):
 
 
 @app.route('/musicdb/api')
-#@login_required
 def musicdb_api():
   return render_template('musicdb_api.html', title='MusicDB API')
 
@@ -467,7 +466,6 @@ MusicDB API Routes
 # this route is used in the frontend.
 # the other 2 routes where used to test the speed of SQL queries
 @app.route('/api/albums')
-#@login_required
 def api_albums():
 
   # get filter params from url
@@ -538,7 +536,6 @@ JOIN songs so ON (al.id = so.albums_id)
 # 1141 Albums with a total of 15576 songs => 1.48MB => between 110ms and 200ms
 # that seems very usable for a fast API
 @app.route('/api/albums-raw')
-#@login_required
 def api_albums_raw():
 
   # GROUP_CONCAT default length is only 1024 bytes
@@ -576,7 +573,6 @@ ORDER BY ar.artist, al.year, al.album
 # 1141 Albums with a total of 15576 songs => 1.48MB => 10 seconds
 # not really usable for a fast API
 @app.route('/api/albums-orm')
-#@login_required
 def api_albums_orm():
 
   # JOIN the artists table, to be able to sort on artists
