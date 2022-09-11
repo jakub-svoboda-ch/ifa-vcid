@@ -1,0 +1,77 @@
+{%- extends "base.html" -%}
+{%- block title -%}Anmelden{%- endblock -%}
+{%- block app_content -%}
+<div class="row justify-content-center">
+<div class="col-sm-12 col-md-8 col-lg-6 col-xl-5 col-xxl-5">
+<ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+  <li class="nav-item" role="presentation">
+    <button class="nav-link {% if view == 'login' -%}active{%- endif %} btn btn-outline-secondary" id="pills-login-tab" data-bs-toggle="pill" data-bs-target="#pills-login" type="button" role="tab">Anmelden</button>
+  </li>
+  <li class="nav-item" role="presentation">
+    <button class="nav-link {% if view == 'register' -%}active{%- endif %} btn btn-outline-secondary" id="pills-register-tab" data-bs-toggle="pill" data-bs-target="#pills-register" type="button" role="tab">Registrieren</button>
+  </li>
+  <li class="nav-item" role="presentation">
+    <button class="nav-link {% if view == 'reset' -%}active{%- endif %} btn btn-outline-secondary" id="pills-forgotpw-tab" data-bs-toggle="pill" data-bs-target="#pills-forgotpw" type="button" role="tab">Passwort vergessen</button>
+  </li>
+</ul>
+<div class="tab-content" id="pills-tabContent">
+  <div class="tab-pane fade {% if view == 'login' -%}show active{%- endif %}" id="pills-login" role="tabpanel">
+    <form action="/user/login" method="post" class="form" role="form" novalidate>
+    {{ form.csrf_token }}
+    <div class="form-floating mb-3">
+        <input type="email" class="form-control" id="login-email" name="email" required placeholder="">
+        <label for="login-email">E-Mail</label>
+    </div>
+    <div class="form-floating mb-3">
+        <input type="password" class="form-control" id="login-password" name="password" required placeholder="">
+        <label for="login-password">Passwort</label>
+    </div>
+    <div class="row">
+        <div class="col">
+            <button type="submit" id="login-submit" name="submit" class="btn btn-primary">Anmelden</button>
+        </div>
+        <div class="col">
+            <div class="form-check form-switch form-check-inline">
+                <input class="form-check-input" type="checkbox" id="remember_me" name="remember_me">
+                <label class="form-check-label" for="remember_me">Angemeldet bleiben</label>
+            </div>
+        </div>
+    </div>
+    </form>
+  </div>
+  <div class="tab-pane fade {% if view == 'register' -%}show active{%- endif %}" id="pills-register" role="tabpanel">
+    <form action="/user/register" method="post" class="form" role="form" novalidate>
+    {{ form.csrf_token }}
+    <div class="form-floating mb-3">
+        <input type="text" class="form-control {% if view == 'register' -%}{% if form.username.errors %}is-invalid{% endif %}{% endif %}" id="register-username" name="username" required placeholder="" {% if view == 'register' -%}{% if form.username.data %}value="{{form.username.data}}"{% endif %}{% endif %}>
+        <label for="register-username">Benutzername</label>
+        <div class="invalid-feedback">Benutzername darf nur Buchstaben beinhalten und muss zwischen 5 und 64 Zeichen lang sein.<br>Ist dies der Fall, ist der Benutzername leider bereits vergeben.</div>
+    </div>
+    <div class="form-floating mb-3">
+        <input type="email" class="form-control {% if view == 'register' -%}{% if form.email.errors %}is-invalid{% endif %}{% endif %}" id="register-email" name="email" required placeholder="" {% if view == 'register' -%}{% if form.email.data %}value="{{form.email.data}}"{% endif %}{% endif %}>
+        <label for="register-email">E-Mail</label>
+        <div class="invalid-feedback">E-Mail Adresse muss gültig sein.<br>Prüfen Sie auch, ob Sie diese nicht bereits registriert haben.</div>
+    </div>
+    <div class="form-floating mb-3">
+        <input type="password" class="form-control {% if view == 'register' -%}{% if form.password.errors %}is-invalid{% endif %}{% endif %}" id="register-password" name="password" required placeholder="" value="">
+        <label for="register-password">Passwort</label>
+        <div class="invalid-feedback">Passwort muss mindestens 12 Zeichen lang, möglichst komplex und einmalig sein.</div>
+    </div>
+    <button type="submit" id="register-submit" name="submit" class="btn btn-primary">Registrieren</button>
+    </form>
+  </div>
+  <div class="tab-pane fade {% if view == 'reset' -%}show active{%- endif %}" id="pills-forgotpw" role="tabpanel">
+    <form action="/user/reset" method="post" class="form" role="form" novalidate>
+    {{ form.csrf_token }}
+    <div class="form-floating mb-3">
+        <input type="email" class="form-control" {% if view == 'register' -%}{% if form.email.errors %}is-invalid{% endif %}{% endif %} id="reset-email" name="email" required placeholder="">
+        <label for="reset-email">E-Mail</label>
+        <div class="invalid-feedback">E-Mail Adresse muss gültig sein.</div>
+    </div>
+    <button type="submit" id="reset-submit" name="submit" class="btn btn-primary">Neues Passwort anfordern</button>
+    </form>
+  </div>
+</div>
+</div>
+</div>
+{%- endblock -%}

@@ -1,0 +1,21 @@
+{
+"data": [
+{%- for album in albums -%}
+{
+"album_id": {{ album.id }},
+"genres_id": {{ album.genres_id }},
+"artists_id": {{ album.artists_id }},
+"album": "{{ album.album|replace('"','') }}",
+"year": {{ album.year }},
+"genre": "{{ album.genres.genre }}",
+"artist": "{{ album.artists.artist }}",
+"tracks": [
+{%- for track in album.tracks -%}
+{"id": {{ track.id }},
+"disc": {{ track.disc }},
+"track": {{ track.track }},
+"title": "{{ track.title|replace('"','') }}",
+"length": "{{ track.length }}"}{{ "," if not loop.last else "" }}
+{%- endfor -%}]}{{ ", " if not loop.last else "" }}{%- endfor -%}],
+"total": {{total}}
+}

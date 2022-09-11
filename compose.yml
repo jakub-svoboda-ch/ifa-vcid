@@ -1,0 +1,88 @@
+
+services:
+  mysql:
+    build: ./mysql
+    image: own/mysqlserver
+    environment:
+      - MYSQL_ROOT_PASSWORD=geheim
+    expose:
+      - 3306
+    healthcheck:
+      test: [ "CMD", "mysqladmin", "status", "-h", "127.0.0.1", "-uroot", "-pgeheim" ]
+      interval: 5s
+      timeout: 2s
+      retries: 20
+      start_period: 30s
+    restart: always
+    volumes:
+      - mysqldatadir:/var/lib/mysql
+      - /dev/log:/dev/log
+      - ./mysql/datadir:/data
+    networks:
+      - backend
+    logging:
+      driver: syslog
+      options:
+        syslog-address: "udp://127.0.0.1:514"
+        tag: docker-mysql
+
+  redis:
+    build: ./redis
+    image: own/redis
+    expose:
+      - 6379
+    restart: always
+    networks:
+      - backend
+    logging:
+      driver: syslog
+      options:
+        syslog-address: "udp://127.0.0.1:514"
+        tag: docker-redis
+
+  flask:
+    build: ./flask
+    image: own/flask
+    stdin_open: true
+    tty: true
+    deploy:
+      replicas: 1
+    restart: always
+    expose:
+      - 5000
+    depends_on:
+      redis:
+        condition: service_started
+      mysql:
+        condition: service_healthy
+    networks:
+      - frontend
+      - backend
+    logging:
+      driver: syslog
+      options:
+        syslog-address: "udp://127.0.0.1:514"
+        tag: docker-flask
+
+  nginx:
+    build: ./nginx
+    image: own/nginx
+    ports:
+      - 80:80
+    depends_on:
+      - flask
+    restart: always
+    networks:
+      - frontend
+    logging:
+      driver: syslog
+      options:
+        syslog-address: "udp://127.0.0.1:514"
+        tag: docker-nginx
+
+volumes:
+  mysqldatadir:
+
+networks:
+  frontend:
+  backend:

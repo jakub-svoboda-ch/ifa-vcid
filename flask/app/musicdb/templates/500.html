@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block app_content %}
+<h1>Error 500 - Internal Server Error</h1>
+
+<div class="container">
+    <div id="a" class="invisible alert alert-danger" role="alert">
+    Jetzt ist etwas auf unserer Seite kaputt. So richtig. Error 500 - Internal Server Error.
+    </div>
+    <div id="b" class="invisible alert alert-success" role="alert">
+    Meistens liegt dies nicht an Ihrem PC, Browser oder Ihnen.
+    </div>
+    <div id="c" class="invisible alert alert-primary" role="alert">
+    Der Fehler wird auf unserer Seite nicht prioritär untersucht oder gar behoben.
+    </div>
+    <div id="d" class="invisible alert alert-info" role="alert">
+    P.S.: Das stimmt sogar, es wurde ja auch kein Administrator benachrichtigt.
+    </div>
+
+    <p id="e" class="invisible"><a href="{{ url_for('index')}}">Hier lang sollte es dann wieder zur Startseite gehen.<br>Sie dürfen Ihr Glück gerne nochmals versuchen.</a></p>
+</div>
+
+{% endblock %}
+
+{%- block scripts -%}
+<script>
+{% raw %}
+window.addEventListener("load", function() {
+    
+    setTimeout(function(){ document.getElementById("a").classList.remove("invisible") }, 1000);
+    setTimeout(function(){ document.getElementById("b").classList.remove("invisible") }, 3000);
+    setTimeout(function(){ document.getElementById("c").classList.remove("invisible") }, 6000);
+    setTimeout(function(){ document.getElementById("d").classList.remove("invisible") }, 9000);
+    setTimeout(function(){ document.getElementById("e").classList.remove("invisible") }, 12000);
+
+});
+{% endraw %}
+</script>
+{%- endblock scripts -%}

@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block app_content %}
+<h1>Error 404 - File not Found</h1>
+
+<div class="alert alert-primary" role="alert">
+  Glückwunsch! Sie haben eine Seite gefunden, die nicht existiert!
+</div>
+
+<div class="alert alert-success" role="alert">
+  Grossartig! Das schafft nicht jeder!
+</div>
+
+<div class="alert alert-danger" role="alert">
+  Computer meint aber dazu: Error 404 - File Not Found
+</div>
+
+<div class="alert alert-info" role="alert">
+  P.S.: Das stimmt sogar, der Azubi war wirklich nicht zu Faul, um zu suchen.
+</div>
+
+
+<p><a href="{{ url_for('index')}}">Hier lang sollte es dann wieder zur Startseite gehen.<br>Sie dürfen Ihr Glück gerne nochmals versuchen.</a></p>
+{% endblock %}

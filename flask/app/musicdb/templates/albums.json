@@ -1,0 +1,19 @@
+{
+"data": [
+    {%- for a in albums -%}
+    {
+        "albums_id": {{ a.albums_id }},
+        "genres_id": {{ a.genres_id }},
+        "artists_id": {{ a.artists_id }},
+        "artist": "{{ a.artist }}",
+        "year": {{ a.year }},
+        "album": "{{ a.album|replace('"','') }}",
+        "genre": "{{ a.genre }}",
+        "disc": {{ a.disc }},
+        "track": {{ a.track }},
+        "title": "{{ a.title|replace('"','') }}",
+        "length": "{{ a.length }}"
+    }{{ ", " if not loop.last else "" }}
+    {%- endfor -%}],
+"total": {{total}}
+}

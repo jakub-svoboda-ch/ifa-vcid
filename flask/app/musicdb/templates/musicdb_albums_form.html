@@ -1,0 +1,129 @@
+{%- extends "base.html" -%}
+{%- block title -%}{{title}}{%- endblock title -%}
+{%- block app_content -%}
+<h1>{{title}}</h1>
+<div class="container">
+    <form id="albumform" role="form" class="form" method="post" novalidate autocomplete="off">
+    {{ form.csrf_token }}
+        <div class="row mb-3">
+            <div class="form-floating col-md-3">
+                <input type="text" class="form-control" id="artist" name="artist" {% if album -%}value="{{album.artists.artist}}"{%- endif -%}>
+                <label for="artist">Künstler</label>
+            </div>
+            <div class="form-floating col">
+                <input class="form-control" id="album" type="text" placeholder="Album" required name="album" {% if album -%}value="{{album.album}}"{%- endif -%} />
+                <label for="album">Album</label>
+                <div class="invalid-feedback">Ein Titel für das Album ist zwingend.</div>
+            </div>
+            <div class="form-floating col-md-2">
+                <select class="form-select" id="year" name="year">
+                    {%- for nr in range(1900,now.year+1) -%}
+                    <option value="{{nr}}" {% if album -%}{%- if album.year == nr -%}selected{%- endif -%}{%- endif -%}>{{nr}}</option>
+                    {%- endfor -%}
+                </select>
+                <label for="year">Jahr</label>
+            </div>
+            <div class="form-floating col-md-3">
+                <input type="text" class="form-control" id="genre" name="genre" {% if album -%}{% if album.genres -%}value="{{album.genres.genre}}"{%- endif -%}{%- endif -%}>
+                <label for="genre">Genre</label>
+            </div>
+        </div>
+        <div class="row mb-1">
+            <div class="form-floating col-md">CD</div>
+            <div class="form-floating col-md">Nr.</div>
+            <div class="form-floating col-md-7">Songtitel</div>
+            <div class="form-floating col-md">Länge</div>
+            <div class="form-floating col-md"></div>
+        </div>
+        {%- if album is not defined -%}
+        {%- set album = {'tracks': [{ 'id': 0, 'disc': 1, 'track': 1 , 'title': '', 'length': ''}]} -%}
+        {%- endif -%}
+        {%- for track in album.tracks -%}
+        <div class="row mb-1" data-loop-index="{{loop.index0}}">
+            <div class="col-md">
+                <select class="form-select form-select-sm text-center" name="tracks-{{loop.index0}}-cd">
+                    {%- for nr in range(1,101) -%}
+                    <option value="{{nr}}" {% if track.disc == nr -%}selected{%- endif -%}>{{nr}}</option>
+                    {%- endfor -%}
+                </select>
+                <input class="" type="hidden" required name="tracks-{{loop.index0}}-id" value="{%- if track.id -%}{{track.id}}{%- else -%}0{%- endif -%}" />
+            </div>
+            <div class="col-md">
+                <select class="form-select form-select-sm text-center" name="tracks-{{loop.index0}}-nr">
+                    {%- for nr in range(1,101) -%}
+                    <option value="{{nr}}" {% if track.track == nr -%}selected{%- endif -%}>{{nr}}</option>
+                    {%- endfor -%}
+                </select>
+            </div>
+            <div class="col-md-7">
+                <input class="form-control form-control-sm" type="text" required name="tracks-{{loop.index0}}-title" {% if track.title -%}value="{{track.title}}"{%- endif -%} />
+                <div class="invalid-feedback">Songtitel ist zwingend.</div>
+            </div>
+            <div class="col-md">
+                <input class="form-control form-control-sm text-center" type="time" min="00:00:00" max="23:59:59" required step="1" name="tracks-{{loop.index0}}-length" {% if track.length -%}value="{{track.length}}"{%- endif -%} />
+                <div class="invalid-feedback">Länge ist zwingend.</div>
+            </div>
+            <div class="form-floating col-md">
+                <div class="btn-group btn-group-sm text-center" role="group">
+                {%- if loop.last -%}
+                    <button class="btn btn-primary btn-primary-sm" onclick="delete_row(this)" type="button"><i class="bi bi-dash-circle"></i></button>
+                    <button class="btn btn-primary btn-primary-sm" onclick="add_row(this)" type="button"><i class="bi bi-plus-circle"></i></button>
+                {%- endif -%}
+                </div>
+            </div>
+        </div>
+        {%- endfor -%}
+        
+        <div class="container text-center mt-3">
+            <div class="row">
+                <div class="col">
+                    <a class="btn btn-primary" id="backButton" role="button" href="/musicdb/albums">zurück zur Liste</a>
+                </div>
+                <div class="col">{%- if album.id -%}
+                    <a class="btn btn-primary" id="deleteButton" role="button" href="/musicdb/albums/delete/{{album.id}}">Album löschen</a>{%- endif -%}
+                </div>
+                <div class="col">
+                    <button class="btn btn-primary" id="submitButton" type="submit">Album speichern</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+{%- endblock -%}
+{%- block scripts -%}
+{# https://github.com/gch1p/bootstrap-5-autocomplete #}
+<script src="/static/js/autocomplete.js"></script>
+<script>
+{% raw %}
+window.addEventListener("load", function() {
+    const genrefield = document.getElementById('genre');
+    const artistfield = document.getElementById('artist');
+    const ac_genre = new Autocomplete(genrefield, {
+        maximumItems: 10,
+        threshold: 1,
+        onSelectItem: ({label, value}) => {
+            console.log("user selected:", label, value);
+        }
+    });
+    const ac_artist = new Autocomplete(artistfield, {
+        maximumItems: 10,
+        threshold: 1,
+        onSelectItem: ({label, value}) => {
+            console.log("user selected:", label, value);
+        }
+    });
+{% endraw %}
+    ac_genre.setData([
+{% for g in genres %}
+    { "value": "{{g.id}}", "label": "{{g.genre}}" },
+{% endfor %}
+    ]);
+    ac_artist.setData([
+{% for a in artists %}
+    { "value": "{{a.id}}", "label": "{{a.artist}}" },
+{% endfor %}
+    ]);
+});
+
+</script>
+{%- endblock scripts -%}

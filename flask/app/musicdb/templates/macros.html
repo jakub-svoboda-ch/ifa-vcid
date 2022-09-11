@@ -1,0 +1,29 @@
+{%- macro nav_link(endpoint, text, icon='') -%}
+{%- if icon == 'group' -%}{%- set icon_html = '<i class="bi bi-people-fill"></i>' -%}{%- endif -%}
+{%- if icon == 'userconfirm' -%}{%- set icon_html = '<i class="bi bi-person-check-fill"></i>' -%}{%- endif -%}
+{%- if icon == 'user' -%}{%- set icon_html = '<i class="bi bi-person-fill"></i>' -%}{%- endif -%}
+{%- if icon == 'userlist' -%}{%- set icon_html = '<i class="bi bi-person-lines-fill"></i>' -%}{%- endif -%}
+{%- if icon == 'userdel' -%}{%- set icon_html = '<i class="bi bi-person-dash-fill"></i>' -%}{%- endif -%}
+{%- if icon == 'useradd' -%}{%- set icon_html = '<i class="bi bi-person-plus-fill"></i>' -%}{%- endif -%}
+{%- if icon == 'genre' -%}{%- set icon_html = '<i class="bi bi-file-music-fill"></i>' -%}{%- endif -%}
+{%- if icon == 'artist' -%}{%- set icon_html = '<i class="bi bi-file-person-fill"></i>' -%}{%- endif -%}
+{%- if icon == 'albums' -%}{%- set icon_html = '<i class="bi bi-disc-fill"></i>' -%}{%- endif -%}
+{%- if icon == 'filter' -%}{%- set icon_html = '<i class="bi bi-filter-square-fill"></i>' -%}{%- endif -%}
+{%- if icon == 'edit' -%}{%- set icon_html = '<i class="bi bi-pencil-fill"></i>' -%}{%- endif -%}
+{%- if icon == 'search' -%}{%- set icon_html = '<i class="bi bi-search"></i>' -%}{%- endif -%}
+{%- if icon == 'delete' -%}{%- set icon_html = '<i class="bi bi-trash-fill"></i>' -%}{%- endif -%}
+{%- if icon == 'dotsh' -%}{%- set icon_html = '<i class="bi bi-three-dots"></i>' -%}{%- endif -%}
+{%- if icon == 'dotsv' -%}{%- set icon_html = '<i class="bi bi-three-dots-vertical"></i>' -%}{%- endif -%}
+{%- if icon == 'minus' -%}{%- set icon_html = '<i class="bi bi-dash-circle"></i>' -%}{%- endif -%}
+{%- if icon == 'plus' -%}{%- set icon_html = '<i class="bi bi-plus-circle"></i>' -%}{%- endif -%}
+{%- if icon == 'profile' -%}{%- set icon_html = '<i class="bi bi-person-circle"></i>' -%}{%- endif -%}
+{%- if icon == 'login' -%}{%- set icon_html = '<i class="bi bi-box-arrow-in-right"></i>' -%}{%- endif -%}
+{%- if icon == 'logout' -%}{%- set icon_html = '<i class="bi bi-box-arrow-left"></i>' -%}{%- endif -%}
+{%- if request.endpoint -%}
+{%- if request.endpoint.endswith(endpoint) -%}
+<a class="nav-link active" href="{{ url_for(endpoint) }}">{%- if icon != '' -%}{{ icon_html|safe }}{%- endif -%}{{text}}</a>
+{%- else -%}
+<a class="nav-link" href="{{ url_for(endpoint) }}">{%- if icon != '' -%}{{ icon_html|safe }}{%- endif -%}{{text}}</a>
+{%- endif -%}
+{%- endif -%}
+{%- endmacro -%}

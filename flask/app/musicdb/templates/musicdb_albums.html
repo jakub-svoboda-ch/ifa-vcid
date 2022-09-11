@@ -1,0 +1,110 @@
+{%- extends "base.html" -%}
+{%- block title -%}{{title}}{%- endblock title -%}
+{%- block styles -%}
+{# https://gridjs.io/ #}
+<link href="https://unpkg.com/gridjs/dist/theme/mermaid.min.css" rel="stylesheet" />
+{%- endblock styles -%}
+{%- block app_content -%}
+<h1 class="albums">{{title}}</h1>
+<div class="container-fluid">
+    <div id="table"></div>
+</div>    
+{%- endblock app_content -%}
+{%- block scripts -%}
+{# https://gridjs.io/ #}
+<script src="https://unpkg.com/gridjs/dist/gridjs.umd.js"></script>
+<script>
+{% raw %}
+window.addEventListener("load", function() {
+    const updateUrl = (prev, query) => {
+    return prev + (prev.indexOf('?') >= 0 ? '&' : '?') + new URLSearchParams(query).toString();
+    };
+
+    new gridjs.Grid({
+    autoWidth: false,
+    columns: [
+        { id: 'albums_id', name: 'AID', hidden: true },
+        { id: 'artist', name: 'Künstler', width: '21%' },
+        { id: 'year', name: 'Jahr', width: '6%' },
+        { id: 'album', name: 'Album', width: '21%' },
+        { id: 'genre', name: 'Genre', width: '13%' },
+        { id: 'disc', name: 'CD', width: '4%' },
+        { id: 'track', name: 'Nr', width: '4%' },
+        { id: 'title', name: 'Titel', width: '21%' },
+        { id: 'length', name: 'Dauer', width: '6%' },
+        {
+          id: 'albums_id',
+          name: ' ',
+          sort: false,
+          formatter: (cell, row) => {
+          return gridjs.html(`<a role="button" class="btn btn-outline-secondary btn-sm" href="/musicdb/albums/edit/${cell}">Edit</a>`);
+          }
+        }
+    ],
+    server: {
+        url: '/api/albums',
+        then: results => results.data,
+        total: results => results.total,
+    },
+    search: {
+        enabled: true,
+        server: {
+        url: (prev, search) => {
+            return updateUrl(prev, {search});
+        },
+        },
+    },
+    sort: {
+        enabled: true,
+        multiColumn: true,
+        server: {
+        url: (prev, columns) => {
+            const columnIds = ['albums_id', 'artist', 'year', 'album', 'genre', 'disc', 'track', 'title', 'length'];
+            const sort = columns.map(col => (col.direction === 1 ? '+' : '-') + columnIds[col.index]);
+            return updateUrl(prev, {sort});
+        },
+        },
+    },
+    pagination: {
+        enabled: true,
+        limit: 20,
+        buttonsCount: 10,
+        server: {
+        url: (prev, page, limit) => {
+            return updateUrl(prev, {start: page * limit, length: limit});
+        },
+        },
+    },
+    language: {
+      search: {
+        placeholder: 'Suchen...'
+      },
+      sort: {
+          sortAsc: 'aufsteigend sortieren',
+          sortDesc: 'absteigend sortieren',
+      },
+      pagination: {
+        previous: '🢀',
+        next: '🢂',
+        showing: 'Zeige',
+        page: (page) => `Seite ${page}`,
+        navigate: (page, pages) => `Seite ${page} von ${pages}`,
+        showing: 'Zeige Lieder',
+        of: 'von',
+        to: 'bis',
+        results: '.'
+      },
+      loading: 'Daten werden geladen...',
+      noRecordsFound: 'Keine Daten gefunden.',
+      error: 'Fehler beim Laden der Daten.'
+    }
+}).render(document.getElementById('table'));
+
+
+document.getElementsByClassName('gridjs-search')[0].insertAdjacentHTML('beforeend',
+     '<a class="btn bnt-primary btn-md ms-3" role="button" href="/musicdb/albums/create">Neues Album eintragen</a>')
+
+{% endraw %}
+});
+</script>
+{%- endblock scripts -%}

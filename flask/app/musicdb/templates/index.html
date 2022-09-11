@@ -1,0 +1,79 @@
+{%- extends "base.html" -%}
+{%- block title -%}{{title}}{%- endblock -%}
+{%- block app_content -%}
+<div>
+  <h1>{{title}}</h1>
+
+<div class="row">
+  <div class="col-md-4">
+    <div class="card text-white bg-primary mb-3" style="max-width: 20rem;">
+      <div class="card-header">Die meisten Songs hat</div>
+      <div class="card-body">
+        <p class="card-text"><ul class="list-group">
+    {%- for a in stats_songs_per_artist -%}
+      <li class="list-group-item d-flex justify-content-between align-items-center">
+        {{a.artist}}
+        <span class="badge bg-primary rounded-pill">{{a.c}}</span>
+      </li>
+    {%- endfor -%}
+    </ul></p>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="card text-white bg-primary mb-3" style="max-width: 20rem;">
+      <div class="card-header">Die meisten Alben hat</div>
+      <div class="card-body">
+        <p class="card-text"><ul class="list-group">
+    {%- for a in stats_albums_per_artist -%}
+      <li class="list-group-item d-flex justify-content-between align-items-center">
+        {{a.artist}}
+        <span class="badge bg-primary rounded-pill">{{a.c}}</span>
+      </li>
+    {%- endfor -%}
+    </ul></p>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="card text-white bg-primary mb-3" style="max-width: 20rem;">
+      <div class="card-header">Einige Statistiken</div>
+      <div class="card-body">
+        <p class="card-text"><ul class="list-group">
+          {%- for a in stats_base -%}
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+              Anzahl Lieder
+              <span class="badge bg-primary rounded-pill">{{a.songs_c}}</span>
+            </li>
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+              Anzahl Alben
+              <span class="badge bg-primary rounded-pill">{{a.albums_c}}</span>
+            </li>
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+              Anzahl Künstler
+              <span class="badge bg-primary rounded-pill">{{a.artists_c}}</span>
+            </li>
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+              Anzahl Genres
+              <span class="badge bg-primary rounded-pill">{{a.genres_c}}</span>
+            </li>
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+              ⌀ Lieder / Genre
+              <span class="badge bg-primary rounded-pill">{{a.avg_songs_genre}}</span>
+            </li>
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+              ⌀ Songs / Künstler
+              <span class="badge bg-primary rounded-pill">{{a.avg_songs_artist}}</span>
+            </li>
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+              ⌀ Lieder / Album
+              <span class="badge bg-primary rounded-pill">{{a.avg_songs_album}}</span>
+            </li>
+          {%- endfor -%}</ul></p>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div>
+{%- endblock -%}

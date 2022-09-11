@@ -1,0 +1,7 @@
+{
+"data": [
+{%- for album in albums -%}
+{{album.tracks}}{{ ", " if not loop.last else "" }}
+{%- endfor -%}],
+"total": {{total}}
+}

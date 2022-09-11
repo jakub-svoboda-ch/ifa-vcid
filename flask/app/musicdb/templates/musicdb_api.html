@@ -1,0 +1,52 @@
+{%- extends "base.html" -%}
+{%- block title -%}{{title}}{%- endblock title -%}
+{%- block app_content -%}
+<div class="container-fluid">
+<h1>{{title}}</h1>
+
+<div class="row">
+  <div class="card text-white bg-primary mb-3">
+    <div class="api card-header"><a href="/api/albums-orm" target="_blank">/api/albums-orm</a></div>
+    <div class="card-body">
+    <h4 class="card-title">1. Versuch mit SQLAlchemy ORM</h4>
+    <p class="card-text">Der Python-Code ist relativ schlank und sieht recht elegant aus. Aber er ist sehr langsam.</p>
+    <p class="card-text">Alle 1141 Alben mit 15576 Liedern => 1.48 MB braucht mehr als 10 Sekunden.</p>
+    </div>
+  </div>
+</div>
+<div class="row">
+  <div class="card text-white bg-primary mb-3">
+    <div class="api card-header"><a href="/api/albums-raw" target="_blank">/api/albums-raw</a></div>
+    <div class="card-body">
+      <h4 class="card-title">2. Versuch mit direktem SQL</h4>
+      <p class="card-text">Diesmal wurde versucht soviel wie möglich direkt im MySQL Server zu erledigen. Der SQL Code ist nicht gerade schön. Aber sehr effizient.</p>
+      <p class="card-text">Alle 1141 Alben mit 15576 Liedern => 1.48 MB nun nur noch 0.11 bis 0.2 Sekunden.</p>
+    </div>
+  </div>
+</div>
+<div class="row">
+  <div class="card text-white bg-primary mb-3">
+    <div class="api card-header"><a href="/api/albums" target="_blank">/api/albums</a></div>
+    <div class="card-body">
+      <h4 class="card-title">Definitive API</h4>
+      <p class="card-text">Aufgrund dieser Erkenntnisse, wurde für die API auf ORM von SQLAlchemy verzichtet. Der benötigte SQL Query wird als Raw-Query an den Server gesendet.</p>
+      <p class="card-text">Diese API wird auch in der App für die tabellarische Listenansicht verwendet.</p>
+      <p class="card-text">Folgende Funktionalitäten werden unterstützt:</p>
+        <h5>Suchen</h5>
+        <p><a href="/api/albums?search=ZZ Top" target="_blank">?search=</a></p>
+        <p>Suche über die Datenbankfelder "artist" OR "album" OR "title" OR "genre"</p>
+
+        <h5>Sortieren</h5>
+        <a href="/api/albums?search=Blues Master&sort=-disc,-track" target="_blank">?sort=[+|-]attr,[+|-]attr</a></p>
+        <p>Sortierung + = ASC, - = DESC für die Datenbankfelder 'artist', 'year', 'album', 'genre', 'disc', 'track', 'title', 'length'</p>
+
+        <h5>Pagination</h5>
+        <p><a href="/api/albums?start=100&amp;length=100" target="_blank">?start=100&amp;length=100</a></p>
+        <p>Navigation durch die Datensätze: start = Default 0 (offset), length = Default 10 (limit)</p>
+      </p>
+    </div>
+  </div>
+</div>
+
+</div>    
+{%- endblock app_content -%}
